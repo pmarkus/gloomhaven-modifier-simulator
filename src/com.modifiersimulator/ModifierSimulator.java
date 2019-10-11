@@ -39,7 +39,7 @@ public class ModifierSimulator {
       modifierDeck.reshuffleIfNecessary();
     }
 
-    return (float)totalDamageMade / (float)totalAttacks;
+    return (float) totalDamageMade / (float) totalAttacks;
   }
 
   public float simulateDisadvantage() {
@@ -58,7 +58,7 @@ public class ModifierSimulator {
       modifierDeck.reshuffleIfNecessary();
     }
 
-    return (float)totalDamageMade / (float)totalAttacks;
+    return (float) totalDamageMade / (float) totalAttacks;
   }
 
   private void addCurses() {
