@@ -7,7 +7,9 @@ public enum ModifierCard {
     ZERO(0),
     PLUS_ONE(1),
     PLUS_TWO(2),
-    CRIT(3);
+    CRIT(3),
+    BLESS(3),
+    CURSE(-3);
 
     private int value;
 
@@ -21,10 +23,10 @@ public enum ModifierCard {
 
     public int apply(int strengthOfAttack, int shield) {
         int damage;
-        if (this == MISS) {
+        if (this.value == -3) {
             damage = 0;
-        } else if (this == CRIT) {
-             damage = strengthOfAttack * 2;
+        } else if (this.value == 3) {
+            damage = strengthOfAttack * 2;
         } else {
             damage = strengthOfAttack + value;
         }
