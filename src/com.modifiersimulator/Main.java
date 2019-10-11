@@ -9,20 +9,35 @@ public class Main {
   final static private Random random = new Random();
 
   public static void main(String[] args) {
+    if (args.length == 0) {
+      for (int actions = 1; actions <= 4; actions++) {
+        for (int attack = 2; attack <= 6; attack++) {
+          for (int shield = 0; shield <= 3; shield++) {
+            for (float curses = 0; curses <= 1.5f; curses+=0.5) {
+              main(new String[]{
+                  String.valueOf(actions),
+                  String.valueOf(attack),
+                  String.valueOf(shield),
+                  String.valueOf(curses)});
+            }
+          }
+        }
+      }
+    }
+
     LinkedList<String> arguments = new LinkedList<>();
     for (int i = 0; i < args.length; i++) {
-      arguments.addLast(args[i]);
+      arguments.add(args[i]);
     }
-    int attacksPerTurn = Integer.getInteger(arguments.poll(), 4);
-    int attack = Integer.getInteger(arguments.poll(), 3);
-    int shield = Integer.getInteger(arguments.poll(), 2);
+    int attacksPerTurn = Integer.parseInt(arguments.peek() != null ? arguments.poll() : "3");
+    int attack = Integer.parseInt(arguments.peek() != null ? arguments.poll() : "4");
+    int shield = Integer.parseInt(arguments.peek() != null ? arguments.poll() : "2");
     float cursesPerTurn = Float.parseFloat(arguments.peek() != null ? arguments.poll() : "0");
 
-    System.out.println("attacksPerTurn: " + attacksPerTurn);
-    System.out.println("attack: " + attack);
-    System.out.println("shield: " + shield);
-    System.out.println("cursesPerTurn: " + cursesPerTurn);
-    System.out.println();
+    System.out.println("Actions: " + attacksPerTurn +
+        "\tAttack: " + attack +
+        "\tShield: " + shield +
+        "\tCurses/turn: " + cursesPerTurn);
 
     ModifierSimulator simulator = new ModifierSimulator(turnsToSimulate, attacksPerTurn, attack, shield, cursesPerTurn);
 
@@ -34,5 +49,6 @@ public class Main {
     System.out.println("Normal: \t" + normalAverage);
     System.out.println("+1 shield: \t" + extraShieldAverage + "\t(normal " + (extraShieldAverage - normalAverage) + ")");
     System.out.println("Disadv.: \t" + disadvantageAverage + "\t(normal " + (disadvantageAverage - normalAverage) + ")");
+    System.out.println();
   }
 }
