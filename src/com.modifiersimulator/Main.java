@@ -1,51 +1,36 @@
 package com.modifiersimulator;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Random;
+
 public class Main {
-    private static int attacksToMake = 10000;
+    private static int turnsToSimulate = 100000;
+    final static private Random random = new Random();
 
     public static void main(String[] args) {
-
-        for (int strengthOfAttack = 2; strengthOfAttack <= 5; strengthOfAttack++) {
-            for (int shield = 0; shield <= 4; shield++) {
-                float normalAverage = estimateNormal(strengthOfAttack, shield);
-                float disadvantageAverage = estimateDisadvantage(strengthOfAttack, shield);
-                System.out.println("Attack: " + strengthOfAttack + ", Shield: " + shield);
-                System.out.println("Avg.dmg.: Normal: " + normalAverage + "\tDisadv: " + disadvantageAverage);
-                System.out.println("Difference in damage: " + (disadvantageAverage - normalAverage));
-                System.out.println();
-            }
+        LinkedList<String> arguments = new LinkedList<>();
+        for (int i = 0; i < args.length; i++) {
+            arguments.addLast(args[i]);
         }
-    }
+        int attacksPerTurn = Integer.getInteger(arguments.poll(), 1);
+        int attack = Integer.getInteger(arguments.poll(), 4);
+        int shield = Integer.getInteger(arguments.poll(), 2);
+        float cursesPerTurn = Float.parseFloat(arguments.peek() != null ? arguments.poll() : "0.5");
 
-    private static float estimateNormal(int strengthOfAttack, int shield) {
-        ModifierDeck modifierDeck = new ModifierDeck();
-        ModifierCard drawnCard;
+        System.out.println("attacksPerTurn: " + attacksPerTurn);
+        System.out.println("attack: " + attack);
+        System.out.println("shield: " + shield);
+        System.out.println("cursesPerTurn: " + cursesPerTurn);
+        System.out.println();
 
-        int totalAttacks = 0;
-        int totalDamageMade = 0;
-        for (int i = 0; i < attacksToMake; i++) {
-            drawnCard = modifierDeck.drawOne();
-            modifierDeck.reshuffleIfNecessary();
-            totalAttacks++;
-            totalDamageMade += drawnCard.apply(strengthOfAttack, shield);
-        }
+        ModifierSimulator simulator = new ModifierSimulator(turnsToSimulate, attacksPerTurn, attack, shield, cursesPerTurn);
 
-       return (float)totalDamageMade / (float)totalAttacks;
-    }
-
-    private static float estimateDisadvantage(int strengthOfAttack, int shield) {
-        ModifierDeck modifierDeck = new ModifierDeck();
-        ModifierCard drawnCard;
-
-        int totalAttacks = 0;
-        int totalDamageMade = 0;
-        for (int i = 0; i < attacksToMake; i++) {
-            drawnCard = modifierDeck.drawDisadvantage();
-            modifierDeck.reshuffleIfNecessary();
-            totalAttacks++;
-            totalDamageMade += drawnCard.apply(strengthOfAttack, shield);
-        }
-
-        return (float)totalDamageMade / (float)totalAttacks;
+        float normalAverage = simulator.simulateNormal();
+        float disadvantageAverage = simulator.simulateDisadvantage();
+        System.out.println("Attack: " + attack + ", Shield: " + shield);
+        System.out.println("Avg.dmg.: Normal: " + normalAverage + "\tDisadv: " + disadvantageAverage);
+        System.out.println("Difference in damage: " + (disadvantageAverage - normalAverage));
+        System.out.println();
     }
 }
