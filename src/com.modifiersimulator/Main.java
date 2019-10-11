@@ -13,10 +13,10 @@ public class Main {
     for (int i = 0; i < args.length; i++) {
       arguments.addLast(args[i]);
     }
-    int attacksPerTurn = Integer.getInteger(arguments.poll(), 1);
-    int attack = Integer.getInteger(arguments.poll(), 4);
+    int attacksPerTurn = Integer.getInteger(arguments.poll(), 4);
+    int attack = Integer.getInteger(arguments.poll(), 3);
     int shield = Integer.getInteger(arguments.poll(), 2);
-    float cursesPerTurn = Float.parseFloat(arguments.peek() != null ? arguments.poll() : "0.5");
+    float cursesPerTurn = Float.parseFloat(arguments.peek() != null ? arguments.poll() : "0");
 
     System.out.println("attacksPerTurn: " + attacksPerTurn);
     System.out.println("attack: " + attack);
@@ -26,11 +26,13 @@ public class Main {
 
     ModifierSimulator simulator = new ModifierSimulator(turnsToSimulate, attacksPerTurn, attack, shield, cursesPerTurn);
 
-    float normalAverage = simulator.simulateNormal();
-    float disadvantageAverage = simulator.simulateDisadvantage();
-    System.out.println("Attack: " + attack + ", Shield: " + shield);
-    System.out.println("Avg.dmg.: Normal: " + normalAverage + "\tDisadv: " + disadvantageAverage);
-    System.out.println("Difference in damage: " + (disadvantageAverage - normalAverage));
-    System.out.println();
+    float normalAverage = simulator.simulate(false);
+    float disadvantageAverage = simulator.simulate(true);
+    simulator = new ModifierSimulator(turnsToSimulate, attacksPerTurn, attack, shield+1, cursesPerTurn);
+    float extraShieldAverage = simulator.simulate(false);
+    System.out.println("Average damage per turn:");
+    System.out.println("Normal: \t" + normalAverage);
+    System.out.println("+1 shield: \t" + extraShieldAverage + "\t(normal " + (extraShieldAverage - normalAverage) + ")");
+    System.out.println("Disadv.: \t" + disadvantageAverage + "\t(normal " + (disadvantageAverage - normalAverage) + ")");
   }
 }

@@ -24,41 +24,27 @@ public class ModifierSimulator {
     modifierDeck = new ModifierDeck();
   }
 
-  public float simulateNormal() {
-    ModifierDeck modifierDeck = new ModifierDeck();
+  public float simulate(boolean disadvantage) {
+    modifierDeck = new ModifierDeck();
     ModifierCard drawnCard;
 
-    int totalAttacks = 0;
+    int totalTurns = 0;
     int totalDamageMade = 0;
     for (int turn = 0; turn < turnsToSimulate; turn++) {
-      for (int action = 0; action < attacksPerTurn; action++) {
-        drawnCard = modifierDeck.drawOne();
-        totalAttacks++;
-        totalDamageMade += drawnCard.apply(attack, shield);
-      }
-      modifierDeck.reshuffleIfNecessary();
-    }
-
-    return (float) totalDamageMade / (float) totalAttacks;
-  }
-
-  public float simulateDisadvantage() {
-    ModifierDeck modifierDeck = new ModifierDeck();
-    ModifierCard drawnCard;
-
-    int totalAttacks = 0;
-    int totalDamageMade = 0;
-    for (int turn = 0; turn < turnsToSimulate; turn++) {
+      totalTurns++;
       addCurses();
       for (int action = 0; action < attacksPerTurn; action++) {
-        drawnCard = modifierDeck.drawDisadvantage();
-        totalAttacks++;
+        if (disadvantage) {
+          drawnCard = modifierDeck.drawDisadvantage();
+        } else {
+          drawnCard = modifierDeck.drawOne();
+        }
         totalDamageMade += drawnCard.apply(attack, shield);
       }
       modifierDeck.reshuffleIfNecessary();
     }
 
-    return (float) totalDamageMade / (float) totalAttacks;
+    return (float) totalDamageMade / (float) totalTurns;
   }
 
   private void addCurses() {
